@@ -5,6 +5,7 @@ import axios from "axios";
 import { Spinner, Form, Row, Col } from "reactstrap";
 import TaskList from "../components/TaskList";
 import Input from '../components/Input'
+import { validateTaskSearch } from '../utils/validations'
 
 export default class Tasks extends Component {
   state = {
@@ -40,7 +41,8 @@ export default class Tasks extends Component {
     this.props.history.push(`/tarefas/${task.id}`);
   };
 
-  onSearchChange = event => {
+  onSearchChange = (event, valid) => {
+    if (!valid) return
     const { value } = event.target;
     const { tasks } = this.state;
 
@@ -108,7 +110,8 @@ export default class Tasks extends Component {
                 id="todo-search"
                 type="text" 
                 placeholder="Buscar tarefas"
-                onChange={this.onSearchChange} />
+                onChange={this.onSearchChange}
+                validate={validateTaskSearch} />
           </Col>
         </Row>
       </Form>

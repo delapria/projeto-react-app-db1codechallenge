@@ -1,21 +1,25 @@
-import { createStore, combineReducers } from 'redux'
+import { createStore, combineReducers, compose, applyMiddleware } from 'redux'
+import reduxThunk from 'redux-thunk'
 import { reducers as postsReducers } from './posts'
+import { reducers as tasksReducers } from './tasks'
 
 //STORE SETUP
 
 const appReducer = combineReducers({
   ...postsReducers,
+  ...tasksReducers,
 })
 
 const { NODE_ENV } = process.env;
 
+const composeEnhancers =
+  NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  ?window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  : compose;
+
 const store = createStore(
   appReducer,
-  NODE_ENV === 'development'
-  ?window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  : undefined
+  composeEnhancers(applyMiddleware(reduxThunk))
 )
-
-//store.dispatch(addPostAction('Meu primeiro post'))
 
 export default store;

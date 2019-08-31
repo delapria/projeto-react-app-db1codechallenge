@@ -1,64 +1,63 @@
 import React, { Component } from "react";
 
 import { Route } from "react-router-dom";
-import axios from "axios";
+import { connect } from 'react-redux'
 import { Spinner, Form, Row, Col } from "reactstrap";
 import TaskList from "../components/TaskList";
 import Input from '../components/Input'
 import { validateTaskSearch } from '../utils/validations'
+import { requestTasksThunk } from '../thunk/tasks'
 
-export default class Tasks extends Component {
+class Tasks extends Component {
   state = {
-    tasks: [],
     filteredTasks: [],
     serchValue: '',
-    fetching: false
   };
 
   componentDidMount() {
-    this.requestTasks();
+    const { requestTasks } = this.props
+    requestTasks();
   }
 
-  requestTasks = () => {
-    this.setState({ fetching: true });
-    axios
-      .get("https://jsonplaceholder.typicode.com/todos")
-      .then(response => {
-        const { data } = response;
-        this.setState({ 
-          tasks: data,
-          filteredTasks: data });
-      })
-      .catch(error => {
-        console.warn(error);
-      })
-      .finally(() => {
-        this.setState({ fetching: false });
-      });
-  };
+  componentDidUpdate(prevProps) {
+    const { tasks } = this.props
+    if (prevProps.tasks.data !== tasks.data) {
+      this.updateFilteredTasks();
+    }
+  }
 
   onTaskClick = task => {
     this.props.history.push(`/tarefas/${task.id}`);
   };
 
-  onSearchChange = (event, valid) => {
-    if (!valid) return
-    const { value } = event.target;
-    const { tasks } = this.state;
+  updateFilteredTasks = () => {
+    const { tasks } = this.props;
+    const { serchValue } = this.state;
 
-    const filteredTasks = tasks.filter(task => {
-      return task.title.includes(value)
+    const filteredTasks = tasks.data.filter(task => {
+      return task.title.includes(serchValue)
     })
 
     this.setState({
       filteredTasks,
-      serchValue: value
+    })
+  }
+
+  onSearchChange = (event, valid) => {
+    if (!valid) return
+    const { value } = event.target;
+    
+    this.setState({
+      serchValue: value,
+    }, () => {
+      this.updateFilteredTasks();
     })
   }
 
   renderTasks = () => {
-    const { fetching, filteredTasks, serchValue } = this.state;
-    if (fetching) {
+    const { filteredTasks, serchValue } = this.state;
+    const { tasks } = this.props
+    if (tasks.fetching) {
       return (
         <div>
           <Spinner color="primary" />
@@ -81,7 +80,8 @@ export default class Tasks extends Component {
 
   renderTaskDetail = routeProps => {
     const { taskId } = routeProps.match.params;
-    const task = this.state.tasks.find(item => item.id === parseInt(taskId));
+    const { tasks } = this.props;
+    const task = tasks.data.find(item => item.id === parseInt(taskId));
     if (!task) {
       return null;
     }
@@ -129,3 +129,13 @@ export default class Tasks extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  tasks: state.tasks,
+})
+
+const mapDispatchToProps = {
+  requestTasks: requestTasksThunk,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tasks)

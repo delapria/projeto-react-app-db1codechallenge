@@ -31,7 +31,10 @@ class PostForm extends Component {
     const { addPost } = this.props;
     const { description } = this.state;
     
-    if (!description) return;
+    if (!description) {
+      this.inputDescription.current.focus()
+      return;
+    }
 
     addPost(description)
     this.setState({

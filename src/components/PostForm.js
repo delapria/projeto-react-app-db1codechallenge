@@ -3,44 +3,31 @@ import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 
 import { addPostAction, clearPostAction } from '../redux/posts'
-import { Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap'
+import { Form, Spinner } from 'reactstrap'
 import Button from 'reactstrap/lib/Button';
+import { Form as FinalForm } from 'react-final-form'
+import { validatePostDescription } from '../utils/validations';
+import axios from 'axios';
+import InputField from './InputField';
 
 class PostForm extends Component {
 
   constructor(props) {
     super(props)
 
-    this.state = {
-      description: '',
-    }
     this.inputDescription = createRef();
   }
 
-
-  onChangeInput = event => {
-    const {value, name} = event.target;
-
-    this.setState({
-      [name]: value,
-    })
-  }
-
-  onSubmit = event => {
-    event.preventDefault();
-    const { addPost } = this.props;
-    const { description } = this.state;
-    
-    if (!description) {
-      this.inputDescription.current.focus()
-      return;
-    }
-
-    addPost(description)
-    this.setState({
-      description: ''
-    })
-    this.inputDescription.current.focus()
+  onSubmit = (values, form) => {
+    //Para teste simular post na api, Spinner
+    return axios.get('http://viacep.com.br/ws/01001000/json/')
+      .then(() => {
+        const { addPost } = this.props;
+        const { description } = values
+        addPost(description)
+        this.inputDescription.current.focus()
+        setTimeout(form.reset);
+      })
   }
 
   onClearClick = () => {
@@ -48,27 +35,44 @@ class PostForm extends Component {
     clearPosts();
   }
 
-  render() {
-    const { description } = this.state
+  renderForm = (renderProps) => {
+    const { handleSubmit, form } = renderProps;
+    const { submitting, pristine } = form.getState()
     return (
-      <Form onSubmit={this.onSubmit} className="mb-3">
+      <Form onSubmit={handleSubmit} className="mb-3">
         <h1>Postagens</h1>
-        <FormGroup>
-          <Label for="input-description">Descrição</Label>
-          <Input 
-            innerRef={this.inputDescription}
-            id="input-description"
-            name="description"
-            type="textarea"
-            rows={3}
-            onChange={this.onChangeInput}
-            value={description}
-          />
-        </FormGroup>
-        <Button type="submit" color="secondary">Postar</Button>
+
+        <InputField 
+          row={2}
+          type="textarea"
+          name="description"
+          id="input-description"
+          label="Descrição"
+          innerRef={this.inputDescription}
+          validate={validatePostDescription}
+        />
+        <Button 
+          type="submit" 
+          disabled={submitting || pristine} 
+          color="secondary">
+          {submitting ? <Spinner size="sm"/> : null }
+          Postar
+        </Button>
         {' '}
-        <Button type="button" onClick={this.onClearClick} color="warning">Limpar</Button>
-      </Form>
+        <Button 
+          type="button" 
+          onClick={this.onClearClick} 
+          color="warning">Limpar</Button>
+      </Form> 
+    ) 
+  }
+
+  render() {  
+    return (
+      <FinalForm
+        onSubmit={this.onSubmit}
+        render={this.renderForm}
+      />
     )
   }
 }

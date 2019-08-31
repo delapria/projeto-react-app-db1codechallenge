@@ -7,8 +7,8 @@ export const receiveTasks = createAction(TASKS_RECEIVE_ACTION)
 export const setFetchingTasks = createAction(TASKS_SET_FETCHING_ACTION)
 
 const INITIAL_STATE = {
-  fetching: false,
   data: [],
+  fetching: false,
   error: null,
 }
 

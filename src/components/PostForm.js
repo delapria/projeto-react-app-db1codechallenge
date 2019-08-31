@@ -20,7 +20,7 @@ class PostForm extends Component {
 
   onSubmit = (values, form) => {
     //Para teste simular post na api, Spinner
-    return axios.get('http://viacep.com.br/ws/01001000/json/')
+    return axios.get('https://viacep.com.br/ws/01001000/json/')
       .then(() => {
         const { addPost } = this.props;
         const { description } = values

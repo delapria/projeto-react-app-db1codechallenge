@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 
-import { addPostAction } from '../redux/posts'
+import { addPostAction, clearPostAction } from '../redux/posts'
 import { Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap'
 import Button from 'reactstrap/lib/Button';
 
@@ -33,6 +33,11 @@ class PostForm extends Component {
     })
   }
 
+  onClearClick = () => {
+    const { clearPosts } = this.props
+    clearPosts();
+  }
+
   render() {
     const { description } = this.state
     return (
@@ -49,7 +54,9 @@ class PostForm extends Component {
             value={description}
           />
         </FormGroup>
-        <Button type="submit" >Postar</Button>
+        <Button type="submit" color="success">Postar</Button>
+        {' '}
+        <Button type="button" onClick={this.onClearClick} color="warning">Limpar</Button>
       </Form>
     )
   }
@@ -57,6 +64,7 @@ class PostForm extends Component {
 
 const mapDispatchToProps = {
   addPost: addPostAction,
+  clearPosts: clearPostAction,
 }
 
 //const mapDispatchToProps = dispatch => {

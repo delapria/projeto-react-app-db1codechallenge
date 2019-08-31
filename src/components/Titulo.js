@@ -7,11 +7,9 @@ const Titulo = (props) => {
   };
 
   return (
-  <h1
-  style={style}
-  >
+    <h1 style={style}>
     {props.children}
-   </h1>
+    </h1>
    );
 };
 

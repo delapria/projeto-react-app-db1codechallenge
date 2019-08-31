@@ -1,18 +1,12 @@
-
+import { createAction } from 'redux-actions'
 
 //ACTIONS
 
 const POSTS_ADD_ACTION = 'POSTS/ADD';
 
-export const addPostAction = (description) => {
-  return {
-    type: POSTS_ADD_ACTION,
-    payload: {
-      description
-    }
-  }
-}
-
+export const addPostAction = createAction(POSTS_ADD_ACTION, (description) => ({
+  description
+}))
 
 //REDUCERS
 

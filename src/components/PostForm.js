@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 
 import { connect } from 'react-redux';
 
@@ -8,9 +8,15 @@ import Button from 'reactstrap/lib/Button';
 
 class PostForm extends Component {
 
-  state = {
-    description: '',
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      description: '',
+    }
+    this.inputDescription = createRef();
   }
+
 
   onChangeInput = event => {
     const {value, name} = event.target;
@@ -31,6 +37,7 @@ class PostForm extends Component {
     this.setState({
       description: ''
     })
+    this.inputDescription.current.focus()
   }
 
   onClearClick = () => {
@@ -46,6 +53,7 @@ class PostForm extends Component {
         <FormGroup>
           <Label for="input-description">Descrição</Label>
           <Input 
+            innerRef={this.inputDescription}
             id="input-description"
             name="description"
             type="textarea"
@@ -54,7 +62,7 @@ class PostForm extends Component {
             value={description}
           />
         </FormGroup>
-        <Button type="submit" color="success">Postar</Button>
+        <Button type="submit" color="secondary">Postar</Button>
         {' '}
         <Button type="button" onClick={this.onClearClick} color="warning">Limpar</Button>
       </Form>

@@ -8,7 +8,7 @@ export const PostList = ({ postsList, removePost }) => (
   <ListGroup>
     {postsList.map((post, index) => (
       <ListGroupItem key={index}>{post.description}
-      <Button close onClick={() => removePost(index)}/>
+      <Button close type="button" onClick={() => removePost(index)}/>
       </ListGroupItem> 
     ))}
   </ListGroup>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Função para destacar partes de um texto
@@ -9,38 +9,39 @@ import React from 'react';
  */
 export function applyHighlight(text, highlight, options = {}) {
   if (text && highlight) {
-      const regex = highlight instanceof RegExp ? highlight : new RegExp(highlight, "gmi");
-      let match;
-      let lastIndex = 0;
-      const textParts = [];
-      while ((match = regex.exec(text))) {
-          const start = match.index;
-          const end = regex.lastIndex;
-          //não precisa destacar
-          if (lastIndex !== start ){
-            textParts.push(
-                <span key={'text-' + lastIndex}>
-                    {text.substring(lastIndex, start)}
-                </span>
-            );
-          }
-          //precisa destacar
-          textParts.push(
-              <span {...options} key={'high-' + start} >
-                  {text.substring(start, end)}
-              </span>
-          );
-          lastIndex = end;
-      }
-      if (!textParts.length) return text;
-      if (lastIndex !== text.lastIndex) {
+    const regex =
+      highlight instanceof RegExp ? highlight : new RegExp(highlight, "gmi");
+    let match;
+    let lastIndex = 0;
+    const textParts = [];
+    while ((match = regex.exec(text))) {
+      const start = match.index;
+      const end = regex.lastIndex;
+      //não precisa destacar
+      if (lastIndex !== start) {
         textParts.push(
-            <span key={'text-' + lastIndex}>
-                {text.substring(lastIndex, text.lastIndex)}
-            </span>
+          <span key={"text-" + lastIndex}>
+            {text.substring(lastIndex, start)}
+          </span>
         );
       }
-      return textParts;
+      //precisa destacar
+      textParts.push(
+        <span {...options} key={"high-" + start}>
+          {text.substring(start, end)}
+        </span>
+      );
+      lastIndex = end;
+    }
+    if (!textParts.length) return text;
+    if (lastIndex !== text.lastIndex) {
+      textParts.push(
+        <span key={"text-" + lastIndex}>
+          {text.substring(lastIndex, text.lastIndex)}
+        </span>
+      );
+    }
+    return textParts;
   }
   return text;
 }

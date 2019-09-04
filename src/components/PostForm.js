@@ -1,48 +1,45 @@
-import React, { Component, createRef } from 'react';
+import React, { Component, createRef } from "react";
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { addPostAction, clearPostAction } from '../redux/posts'
-import { Form, Spinner } from 'reactstrap'
-import Button from 'reactstrap/lib/Button';
-import { Form as FinalForm } from 'react-final-form'
-import { validatePostDescription } from '../utils/validations';
-import axios from 'axios';
-import InputField from './InputField';
+import { addPostAction, clearPostAction } from "../redux/posts";
+import { Form, Spinner } from "reactstrap";
+import Button from "reactstrap/lib/Button";
+import { Form as FinalForm } from "react-final-form";
+import { validatePostDescription } from "../utils/validations";
+import axios from "axios";
+import InputField from "./InputField";
 
 class PostForm extends Component {
-
   constructor(props) {
-    super(props)
+    super(props);
 
     this.inputDescription = createRef();
   }
 
   onSubmit = (values, form) => {
     //Para teste simular post na api, Spinner
-    return axios.get('https://viacep.com.br/ws/01001000/json/')
-      .then(() => {
-        const { addPost } = this.props;
-        const { description } = values
-        addPost(description)
-        this.inputDescription.current.focus()
-        setTimeout(form.reset);
-      })
-  }
+    return axios.get("https://viacep.com.br/ws/01001000/json/").then(() => {
+      const { addPost } = this.props;
+      const { description } = values;
+      addPost(description);
+      this.inputDescription.current.focus();
+      setTimeout(form.reset);
+    });
+  };
 
   onClearClick = () => {
-    const { clearPosts } = this.props
+    const { clearPosts } = this.props;
     clearPosts();
-  }
+  };
 
-  renderForm = (renderProps) => {
+  renderForm = renderProps => {
     const { handleSubmit, form } = renderProps;
-    const { submitting, pristine } = form.getState()
+    const { submitting, pristine } = form.getState();
     return (
       <Form onSubmit={handleSubmit} className="mb-3">
         <h1>Postagens</h1>
-
-        <InputField 
+        <InputField
           row={2}
           type="textarea"
           name="description"
@@ -51,36 +48,30 @@ class PostForm extends Component {
           innerRef={this.inputDescription}
           validate={validatePostDescription}
         />
-        <Button 
-          type="submit" 
-          disabled={submitting || pristine} 
-          color="secondary">
-          {submitting ? <Spinner size="sm"/> : null }
+        <Button
+          type="submit"
+          disabled={submitting || pristine}
+          color="secondary"
+        >
+          {submitting ? <Spinner size="sm" /> : null}
           Postar
+        </Button>{" "}
+        <Button type="button" onClick={this.onClearClick} color="warning">
+          Limpar
         </Button>
-        {' '}
-        <Button 
-          type="button" 
-          onClick={this.onClearClick} 
-          color="warning">Limpar</Button>
-      </Form> 
-    ) 
-  }
+      </Form>
+    );
+  };
 
-  render() {  
-    return (
-      <FinalForm
-        onSubmit={this.onSubmit}
-        render={this.renderForm}
-      />
-    )
+  render() {
+    return <FinalForm onSubmit={this.onSubmit} render={this.renderForm} />;
   }
 }
 
 const mapDispatchToProps = {
   addPost: addPostAction,
-  clearPosts: clearPostAction,
-}
+  clearPosts: clearPostAction
+};
 
 //const mapDispatchToProps = dispatch => {
 //  return {
@@ -90,4 +81,7 @@ const mapDispatchToProps = {
 //  }
 //}
 
-export default connect(null, mapDispatchToProps)(PostForm);
+export default connect(
+  null,
+  mapDispatchToProps
+)(PostForm);

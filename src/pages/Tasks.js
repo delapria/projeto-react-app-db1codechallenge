@@ -1,26 +1,26 @@
 import React, { Component } from "react";
 
 import { Route } from "react-router-dom";
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
 import { Spinner, Form, Row, Col } from "reactstrap";
 import TaskList from "../components/TaskList";
-import Input from '../components/Input'
-import { validateTaskSearch } from '../utils/validations'
-import { requestTasksThunk } from '../thunk/tasks'
+import Input from "../components/Input";
+import { validateTaskSearch } from "../utils/validations";
+import { requestTasksThunk } from "../thunk/tasks";
 
 class Tasks extends Component {
   state = {
     filteredTasks: [],
-    serchValue: '',
+    serchValue: ""
   };
 
   componentDidMount() {
-    const { requestTasks } = this.props
+    const { requestTasks } = this.props;
     requestTasks();
   }
 
   componentDidUpdate(prevProps) {
-    const { tasks } = this.props
+    const { tasks } = this.props;
     if (prevProps.tasks.data !== tasks.data) {
       this.updateFilteredTasks();
     }
@@ -35,28 +35,31 @@ class Tasks extends Component {
     const { serchValue } = this.state;
 
     const filteredTasks = tasks.data.filter(task => {
-      return task.title.includes(serchValue)
-    })
+      return task.title.includes(serchValue);
+    });
 
     this.setState({
-      filteredTasks,
-    })
-  }
+      filteredTasks
+    });
+  };
 
   onSearchChange = (event, valid) => {
-    if (!valid) return
+    if (!valid) return;
     const { value } = event.target;
-    
-    this.setState({
-      serchValue: value,
-    }, () => {
-      this.updateFilteredTasks();
-    })
-  }
+
+    this.setState(
+      {
+        serchValue: value
+      },
+      () => {
+        this.updateFilteredTasks();
+      }
+    );
+  };
 
   renderTasks = () => {
     const { filteredTasks, serchValue } = this.state;
-    const { tasks } = this.props
+    const { tasks } = this.props;
     if (tasks.fetching) {
       return (
         <div>
@@ -68,14 +71,16 @@ class Tasks extends Component {
           <Spinner color="info" />
           <Spinner color="light" />
           <Spinner color="dark" />
-        </div> 
+        </div>
       );
     }
-    return <TaskList  
-      tasks={filteredTasks} 
-      onTaskClick={this.onTaskClick}
-      highlight={serchValue}
-     />;
+    return (
+      <TaskList
+        tasks={filteredTasks}
+        onTaskClick={this.onTaskClick}
+        highlight={serchValue}
+      />
+    );
   };
 
   renderTaskDetail = routeProps => {
@@ -105,18 +110,19 @@ class Tasks extends Component {
       <Form>
         <Row form>
           <Col md={6}>
-              <Input 
-                label="Filtro"
-                id="todo-search"
-                type="text" 
-                placeholder="Buscar tarefas"
-                onChange={this.onSearchChange}
-                validate={validateTaskSearch} />
+            <Input
+              label="Filtro"
+              id="todo-search"
+              type="text"
+              placeholder="Buscar tarefas"
+              onChange={this.onSearchChange}
+              validate={validateTaskSearch}
+            />
           </Col>
         </Row>
       </Form>
-    )
-  }
+    );
+  };
 
   render() {
     return (
@@ -131,11 +137,14 @@ class Tasks extends Component {
 }
 
 const mapStateToProps = state => ({
-  tasks: state.tasks,
-})
+  tasks: state.tasks
+});
 
 const mapDispatchToProps = {
-  requestTasks: requestTasksThunk,
-}
+  requestTasks: requestTasksThunk
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tasks)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Tasks);

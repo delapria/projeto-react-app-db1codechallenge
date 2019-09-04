@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class About extends Component {
-  state = {  }
+  state = {};
   render() {
-    return (
-      <div>
-        Página Sobre
-      </div>
-    );
+    return <div>Página Sobre</div>;
   }
 }
 

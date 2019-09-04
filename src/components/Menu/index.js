@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 import {
   Collapse,
@@ -7,28 +7,26 @@ import {
   Nav,
   NavItem,
   NavLink
-} from 'reactstrap'
-import { Link, withRouter } from 'react-router-dom'
+} from "reactstrap";
+import { Link, withRouter } from "react-router-dom";
 
-import { isLoggedIn, setLoggedIn } from '../../utils/fake-login'
+import { isLoggedIn, setLoggedIn } from "../../utils/fake-login";
 
-const NavLinkRouter = props => (
-  <Link className='nav-link' {...props} />
-)
+const NavLinkRouter = props => <Link className="nav-link" {...props} />;
 
 class Menu extends Component {
   state = {
     open: false
-  }
+  };
 
   toggleOpen = () => {
-    this.setState({open: !this.state.open})
-  }
+    this.setState({ open: !this.state.open });
+  };
 
   onLogoutClick = () => {
-    setLoggedIn(false)
-    this.props.history.push('/')
-  }
+    setLoggedIn(false);
+    this.props.history.push("/");
+  };
 
   renderLogout = () => {
     if (!isLoggedIn()) {
@@ -36,36 +34,40 @@ class Menu extends Component {
         <NavItem>
           <NavLinkRouter to="/login">Login</NavLinkRouter>
         </NavItem>
-      )
+      );
     }
 
     return (
       <NavItem>
-        <NavLink href='#' onClick={this.onLogoutClick}>Sair</NavLink>
+        <NavLink href="#" onClick={this.onLogoutClick}>
+          Sair
+        </NavLink>
       </NavItem>
-    )
-  }
+    );
+  };
 
   render() {
     return (
       <Navbar color="secondary" light expand="md">
-      <Link className='mr-auto navbar-brand' to="/">ReactApp</Link>
-      <NavbarToggler onClick={this.toggleOpen} />
-      <Collapse isOpen={this.state.open} navbar>
-        <Nav className="ml-auto" navbar>
-          <NavItem>
-            <NavLinkRouter to="/tarefas">Tarefas</NavLinkRouter>
-          </NavItem>
-          <NavItem>
-            <NavLinkRouter to="/postagens">Postagens</NavLinkRouter>
-          </NavItem>
-          <NavItem>
-            <NavLinkRouter to="/sobre">Sobre</NavLinkRouter>
-          </NavItem>
-          {this.renderLogout()}
-        </Nav>
-      </Collapse>
-    </Navbar>      
+        <Link className="mr-auto navbar-brand" to="/">
+          ReactApp
+        </Link>
+        <NavbarToggler onClick={this.toggleOpen} />
+        <Collapse isOpen={this.state.open} navbar>
+          <Nav className="ml-auto" navbar>
+            <NavItem>
+              <NavLinkRouter to="/tarefas">Tarefas</NavLinkRouter>
+            </NavItem>
+            <NavItem>
+              <NavLinkRouter to="/postagens">Postagens</NavLinkRouter>
+            </NavItem>
+            <NavItem>
+              <NavLinkRouter to="/sobre">Sobre</NavLinkRouter>
+            </NavItem>
+            {this.renderLogout()}
+          </Nav>
+        </Collapse>
+      </Navbar>
     );
   }
 }
